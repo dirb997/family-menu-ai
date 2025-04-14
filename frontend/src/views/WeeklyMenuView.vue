@@ -30,10 +30,11 @@ function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-// Add this method to the script setup section
+// Fixed function to properly check if today matches the passed day name
 function isToday(day) {
-  const today = new Date().toLocaleLowerCase();
-  return today.includes(day);
+  const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const today = new Date().getDay(); // Returns 0-6 (0 = Sunday, 1 = Monday, etc.)
+  return daysOfWeek[today] === day.toLowerCase();
 }
 </script>
 

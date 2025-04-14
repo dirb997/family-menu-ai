@@ -5,7 +5,13 @@ const { Menu, NormalMenu, KidsMenu, AllergyMenu } = require('../models');
 // Get all menus
 router.get('/', async (req, res) => {
   try {
-    const menus = await Menu.findAll();
+    const menus = await Menu.findAll({
+      include: [
+        { model: NormalMenu, required: false },
+        { model: KidsMenu, required: false },
+        { model: AllergyMenu, required: false }
+      ]
+    });
     res.json(menus);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -48,6 +54,11 @@ router.get('/type/:type', async (req, res) => {
 router.get('/weekly', async (req, res) => {
   try {
     const menus = await Menu.findAll({
+      include: [
+        { model: NormalMenu, required: false },
+        { model: KidsMenu, required: false },
+        { model: AllergyMenu, required: false }
+      ],
       order: [
         ['dayOfWeek', 'ASC'],
         ['mealType', 'ASC']

@@ -29,6 +29,12 @@ async function deleteMenuItem(id) {
   }
 }
 
+// Helper function to capitalize first letter
+function capitalize(string) {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function setActiveTab(tab) {
   activeTab.value = tab
 }

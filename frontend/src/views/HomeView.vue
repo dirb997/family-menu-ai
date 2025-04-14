@@ -328,15 +328,15 @@ label {
 }
 
 .menu-result {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
 .dish-card {
   background-color: white;
   padding: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0; /* Removed bottom margin since we're using gap */
   position: relative;
   border-top: 4px solid var(--primary-color);
 }
