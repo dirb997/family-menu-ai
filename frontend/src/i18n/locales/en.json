@@ -1,0 +1,110 @@
+{
+  "nav": {
+    "home": "Home",
+    "weeklyMenu": "Weekly Menu",
+    "allMenus": "All Menus"
+  },
+  "language": {
+    "en": "English",
+    "ja": "Japanese" 
+  },
+  "footer": {
+    "copyright": "© {year} Menu Creator App"
+  },
+  "home": {
+    "title": "Menu Creator",
+    "intro": {
+      "welcome": "Welcome to the AI-powered Menu Creator! Use this tool to generate custom meal plans based on your preferences.",
+      "instructions": "Enter your requirements in the prompt box below, and our AI will suggest dishes for your menu."
+    },
+    "generate": {
+      "title": "Generate Menu",
+      "menuType": "Menu Type:",
+      "dayOfWeek": "Day of Week:",
+      "mealType": "Meal Type:",
+      "prompt": "Prompt:",
+      "promptPlaceholder": "Example: Create a healthy vegetarian dinner for 4 people with easily accessible ingredients...",
+      "button": "Generate Menu",
+      "generating": "Generating..."
+    },
+    "results": {
+      "title": "Generated Menu Suggestions",
+      "serves": "Serves: {count} people",
+      "saveButton": "Save to {day} {meal}"
+    },
+    "menuTypes": {
+      "normal": "Normal Menu",
+      "kids": "Kids Menu",
+      "allergy": "Allergy-Friendly Menu"
+    },
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "meals": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner"
+    },
+    "alerts": {
+      "promptRequired": "Please enter a prompt for menu generation",
+      "saveSuccess": "Menu item saved successfully!"
+    }
+  },
+  "menuList": {
+    "title": "All Menus",
+    "loading": "Loading menus...",
+    "noMenus": "No menus found. Create some menus first!",
+    "filter": {
+      "title": "Filter Menus",
+      "type": "Menu Type",
+      "day": "Day of Week",
+      "meal": "Meal Type",
+      "apply": "Apply Filters",
+      "reset": "Reset Filters"
+    },
+    "viewDetails": "View Details",
+    "deleteMenu": "Delete",
+    "confirmDelete": "Are you sure you want to delete this menu item?",
+    "tryGenerating": "Try generating some on the home page!",
+    "goToGenerator": "Go to Menu Generator",
+    "ageRange": "Age Range",
+    "allergens": "Allergens",
+    "noneSpecified": "None specified"
+  },
+  "menuDetail": {
+    "loading": "Loading menu details...",
+    "notFound": "Menu not found",
+    "backToList": "Back to All Menus",
+    "sections": {
+      "description": "Description",
+      "details": "Details"
+    },
+    "info": {
+      "type": "Menu Type",
+      "day": "Day",
+      "meal": "Meal",
+      "serves": "Serves {count} People",
+      "created": "Created",
+      "updated": "Last Updated"
+    }
+  },
+  "weeklyMenu": {
+    "title": "Weekly Menu Planner",
+    "emptySlot": "No menu planned",
+    "addMenu": "Add Menu",
+    "viewDetails": "View Details",
+    "noData": "No menu data available yet.",
+    "generateHint": "Generate some menu items on the home page to get started!",
+    "today": "TODAY"
+  },
+  "common": {
+    "error": "An error occurred",
+    "loading": "Loading..."
+  }
+}

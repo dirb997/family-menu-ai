@@ -1,5 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
+const { t, locale } = useI18n()
+
+const toggleLanguage = () => {
+  locale.value = locale.value === 'en' ? 'ja' : 'en'
+}
 </script>
 
 <template>
@@ -9,9 +16,14 @@ import { RouterLink, RouterView } from 'vue-router'
         <h1>Menu Creator</h1>
       </div>
       <div class="nav-links">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/weekly-menu">Weekly Menu</RouterLink>
-        <RouterLink to="/menu-list">All Menus</RouterLink>
+        <RouterLink to="/">{{ t('nav.home') }}</RouterLink>
+        <RouterLink to="/weekly-menu">{{ t('nav.weeklyMenu') }}</RouterLink>
+        <RouterLink to="/menu-list">{{ t('nav.allMenus') }}</RouterLink>
+      </div>
+      <div class="language-switcher">
+        <button @click="toggleLanguage" class="language-toggle">
+          {{ locale === 'en' ? '日本語' : 'English' }}
+        </button>
       </div>
     </nav>
   </header>
@@ -21,7 +33,7 @@ import { RouterLink, RouterView } from 'vue-router'
   </main>
 
   <footer>
-    <p>© {{ new Date().getFullYear() }} Menu Creator App</p>
+    <p>{{ t('footer.copyright', { year: new Date().getFullYear() }) }}</p>
   </footer>
 </template>
 
@@ -110,6 +122,24 @@ body {
   height: 3px;
   background-color: var(--light-color);
   border-radius: 3px;
+}
+
+.language-switcher {
+  margin-left: 1rem;
+}
+
+.language-toggle {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.language-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 main {
@@ -215,11 +245,17 @@ input:focus, select:focus, textarea:focus {
   .nav-links {
     width: 100%;
     justify-content: space-around;
+    margin-bottom: 1rem;
   }
   
   .nav-links a {
     padding: 0.5rem;
     font-size: 0.9rem;
+  }
+
+  .language-switcher {
+    margin-left: 0;
+    margin-top: 0.5rem;
   }
   
   main {

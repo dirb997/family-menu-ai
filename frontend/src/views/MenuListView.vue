@@ -1,8 +1,10 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 const store = useStore()
+const { t } = useI18n()
 const activeTab = ref('normal')
 
 const loading = computed(() => store.getters.isLoading)
@@ -20,7 +22,7 @@ onMounted(() => {
 
 // Delete a menu item
 async function deleteMenuItem(id) {
-  if (confirm('Are you sure you want to delete this menu item?')) {
+  if (confirm(t('menuList.confirmDelete'))) {
     const deleted = await store.dispatch('deleteMenu', id)
     if (deleted) {
       // Refetch the menus
@@ -35,6 +37,15 @@ function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// Get translated day and meal names
+function getTranslatedDay(day) {
+  return t(`home.days.${day}`);
+}
+
+function getTranslatedMeal(meal) {
+  return t(`home.meals.${meal}`);
+}
+
 function setActiveTab(tab) {
   activeTab.value = tab
 }
@@ -47,11 +58,17 @@ const activeTabPosition = computed(() => {
     default: return '0%';
   }
 });
+
+const menuTypeLabels = computed(() => ({
+  normal: t('home.menuTypes.normal'),
+  kids: t('home.menuTypes.kids'),
+  allergy: t('home.menuTypes.allergy')
+}));
 </script>
 
 <template>
   <div class="menu-list-view">
-    <h1 class="page-title">All Menus</h1>
+    <h1 class="page-title">{{ t('menuList.title') }}</h1>
     
     <div class="tabs-container">
       <div class="tabs">
@@ -60,21 +77,21 @@ const activeTabPosition = computed(() => {
           @click="setActiveTab('normal')"
         >
           <span class="tab-icon">🍽️</span>
-          Normal Menu
+          {{ menuTypeLabels.normal }}
         </button>
         <button 
           :class="['tab-button', { active: activeTab === 'kids' }]" 
           @click="setActiveTab('kids')"
         >
           <span class="tab-icon">👶</span>
-          Kids Menu
+          {{ menuTypeLabels.kids }}
         </button>
         <button 
           :class="['tab-button', { active: activeTab === 'allergy' }]" 
           @click="setActiveTab('allergy')"
         >
           <span class="tab-icon">🌱</span>
-          Allergy-Friendly Menu
+          {{ menuTypeLabels.allergy }}
         </button>
       </div>
       
@@ -83,7 +100,7 @@ const activeTabPosition = computed(() => {
     
     <div v-if="loading" class="loading">
       <span class="spinner-large"></span>
-      Loading menus...
+      {{ t('menuList.loading') }}
     </div>
     
     <div v-else-if="error" class="error-message">
@@ -94,13 +111,13 @@ const activeTabPosition = computed(() => {
     <div v-else class="menu-grid">
       <div v-if="filteredMenus.length === 0" class="no-menus card">
         <div class="empty-state">
-          <svg v-if="activeTab === 'normal'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <svg v-if="activeTab === 'allergy'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
             <path d="M7 2v20"></path>
             <path d="M21 15V2H11v13"></path>
             <path d="M11 15a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3"></path>
           </svg>
-          <svg v-else-if="activeTab === 'kids'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <svg v-else-if="activeTab === 'normal'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
             <circle cx="9" cy="9" r="1"></circle>
             <circle cx="15" cy="9" r="1"></circle>
@@ -112,9 +129,9 @@ const activeTabPosition = computed(() => {
             <path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"></path>
             <path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"></path>
           </svg>
-          <p>No {{ activeTab }} menus found</p>
-          <p class="empty-state-hint">Try generating some on the home page!</p>
-          <router-link to="/" class="btn btn-primary">Go to Menu Generator</router-link>
+          <p>{{ t('menuList.noMenus') }}</p>
+          <p class="empty-state-hint">{{ t('menuList.tryGenerating') }}</p>
+          <router-link to="/" class="btn btn-primary">{{ t('menuList.goToGenerator') }}</router-link>
         </div>
       </div>
       
@@ -123,8 +140,8 @@ const activeTabPosition = computed(() => {
         <div class="menu-header">
           <h3>{{ menu.name }}</h3>
           <div class="menu-tags">
-            <span class="tag day-tag">{{ capitalize(menu.dayOfWeek) }}</span>
-            <span class="tag meal-tag">{{ capitalize(menu.mealType) }}</span>
+            <span class="tag day-tag">{{ getTranslatedDay(menu.dayOfWeek) }}</span>
+            <span class="tag meal-tag">{{ getTranslatedMeal(menu.mealType) }}</span>
           </div>
         </div>
         <div class="menu-content">
@@ -132,17 +149,17 @@ const activeTabPosition = computed(() => {
           <div class="menu-info">
             <div class="menu-info-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-              <span><strong>Serves:</strong> {{ menu.numberOfPeople }} people</span>
+              <span><strong>{{ t('menuDetail.info.serves', { count: menu.numberOfPeople }) }}</strong></span>
             </div>
             
             <!-- Show specific fields based on menu type -->
             <div v-if="activeTab === 'kids' && menu.KidsMenu" class="menu-info-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><circle cx="9" cy="9" r="1"></circle><circle cx="15" cy="9" r="1"></circle><circle cx="12" cy="12" r="10"></circle></svg>
-              <span><strong>Age Range:</strong> {{ menu.KidsMenu.ageRange }}</span>
+              <span><strong>{{ t('menuList.ageRange') }}:</strong> {{ menu.KidsMenu.ageRange }}</span>
             </div>
             <div v-if="activeTab === 'allergy' && menu.AllergyMenu" class="menu-info-item">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 12 2.1 9.1a10 10 0 0 0 9.8 12.9"></path></svg>
-              <span><strong>Allergens:</strong> {{ menu.AllergyMenu.allergens || 'None specified' }}</span>
+              <span><strong>{{ t('menuList.allergens') }}:</strong> {{ menu.AllergyMenu.allergens || t('menuList.noneSpecified') }}</span>
             </div>
           </div>
         </div>
@@ -154,7 +171,7 @@ const activeTabPosition = computed(() => {
               <line x1="10" y1="11" x2="10" y2="17"></line>
               <line x1="14" y1="11" x2="14" y2="17"></line>
             </svg>
-            Delete
+            {{ t('menuList.deleteMenu') }}
           </button>
         </div>
       </div>

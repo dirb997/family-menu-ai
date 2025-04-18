@@ -1,8 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 const store = useStore()
+const { t, locale } = useI18n()  // Add i18n support
+
 const prompt = ref('')
 const menuType = ref('normal')
 const dayOfWeek = ref('monday')
@@ -12,32 +15,32 @@ const loading = computed(() => store.getters.isLoading)
 const error = computed(() => store.getters.getError)
 const generatedMenus = computed(() => store.getters.getGeneratedMenus)
 
-const menuTypes = [
-  { value: 'normal', label: 'Normal Menu' },
-  { value: 'kids', label: 'Kids Menu' },
-  { value: 'allergy', label: 'Allergy-Friendly Menu' }
-]
+const menuTypes = computed(() => [
+  { value: 'normal', label: t('home.menuTypes.normal') },
+  { value: 'kids', label: t('home.menuTypes.kids') },
+  { value: 'allergy', label: t('home.menuTypes.allergy') }
+])
 
-const daysOfWeek = [
-  { value: 'monday', label: 'Monday' },
-  { value: 'tuesday', label: 'Tuesday' },
-  { value: 'wednesday', label: 'Wednesday' },
-  { value: 'thursday', label: 'Thursday' },
-  { value: 'friday', label: 'Friday' },
-  { value: 'saturday', label: 'Saturday' },
-  { value: 'sunday', label: 'Sunday' }
-]
+const daysOfWeek = computed(() => [
+  { value: 'monday', label: t('home.days.monday') },
+  { value: 'tuesday', label: t('home.days.tuesday') },
+  { value: 'wednesday', label: t('home.days.wednesday') },
+  { value: 'thursday', label: t('home.days.thursday') },
+  { value: 'friday', label: t('home.days.friday') },
+  { value: 'saturday', label: t('home.days.saturday') },
+  { value: 'sunday', label: t('home.days.sunday') }
+])
 
-const mealTypes = [
-  { value: 'breakfast', label: 'Breakfast' },
-  { value: 'lunch', label: 'Lunch' },
-  { value: 'dinner', label: 'Dinner' }
-]
+const mealTypes = computed(() => [
+  { value: 'breakfast', label: t('home.meals.breakfast') },
+  { value: 'lunch', label: t('home.meals.lunch') },
+  { value: 'dinner', label: t('home.meals.dinner') }
+])
 
 // Generate menu based on prompt
 async function generateMenu() {
   if (!prompt.value.trim()) {
-    alert('Please enter a prompt for menu generation');
+    alert(t('home.alerts.promptRequired'));
     return;
   }
   
@@ -67,25 +70,32 @@ async function saveMenuItem(dish) {
 
   const saved = await store.dispatch('saveMenu', menuData);
   if (saved) {
-    alert('Menu item saved successfully!');
+    alert(t('home.alerts.saveSuccess'));
   }
 }
+
+// Helper function to get day and meal in the right format for display
+const getFormattedDayAndMeal = computed(() => {
+  const day = t(`home.days.${dayOfWeek.value}`);
+  const meal = t(`home.meals.${mealType.value}`);
+  return { day, meal };
+})
 </script>
 
 <template>
   <div class="home-view">
-    <h1 class="page-title">Menu Creator</h1>
+    <h1 class="page-title">{{ t('home.title') }}</h1>
     <div class="intro card">
-      <p>Welcome to the AI-powered Menu Creator! Use this tool to generate custom meal plans based on your preferences.</p>
-      <p>Enter your requirements in the prompt box below, and our AI will suggest dishes for your menu.</p>
+      <p>{{ t('home.intro.welcome') }}</p>
+      <p>{{ t('home.intro.instructions') }}</p>
     </div>
 
     <div class="prompt-container card">
-      <h2>Generate Menu</h2>
+      <h2>{{ t('home.generate.title') }}</h2>
       
       <div class="form-grid">
         <div class="form-group">
-          <label for="menu-type">Menu Type:</label>
+          <label for="menu-type">{{ t('home.generate.menuType') }}</label>
           <select id="menu-type" v-model="menuType" class="select-styled">
             <option v-for="type in menuTypes" :key="type.value" :value="type.value">
               {{ type.label }}
@@ -94,7 +104,7 @@ async function saveMenuItem(dish) {
         </div>
         
         <div class="form-group">
-          <label for="day">Day of Week:</label>
+          <label for="day">{{ t('home.generate.dayOfWeek') }}</label>
           <select id="day" v-model="dayOfWeek" class="select-styled">
             <option v-for="day in daysOfWeek" :key="day.value" :value="day.value">
               {{ day.label }}
@@ -103,7 +113,7 @@ async function saveMenuItem(dish) {
         </div>
         
         <div class="form-group">
-          <label for="meal">Meal Type:</label>
+          <label for="meal">{{ t('home.generate.mealType') }}</label>
           <select id="meal" v-model="mealType" class="select-styled">
             <option v-for="meal in mealTypes" :key="meal.value" :value="meal.value">
               {{ meal.label }}
@@ -113,11 +123,11 @@ async function saveMenuItem(dish) {
       </div>
       
       <div class="form-group">
-        <label for="prompt">Prompt:</label>
+        <label for="prompt">{{ t('home.generate.prompt') }}</label>
         <textarea
           id="prompt"
           v-model="prompt"
-          placeholder="Example: Create a healthy vegetarian dinner for 4 people with easily accessible ingredients..."
+          :placeholder="t('home.generate.promptPlaceholder')"
           rows="5"
           class="textarea-styled"
         ></textarea>
@@ -130,7 +140,7 @@ async function saveMenuItem(dish) {
         <span v-else class="btn-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
         </span>
-        {{ loading ? 'Generating...' : 'Generate Menu' }}
+        {{ loading ? t('home.generate.generating') : t('home.generate.button') }}
       </button>
     </div>
 
@@ -140,7 +150,7 @@ async function saveMenuItem(dish) {
     </div>
 
     <div v-if="generatedMenus.length > 0" class="generated-menus">
-      <h2 class="section-title">Generated Menu Suggestions</h2>
+      <h2 class="section-title">{{ t('home.results.title') }}</h2>
       
       <div v-for="(menu, menuIndex) in generatedMenus" :key="menuIndex" class="menu-result">
         <div v-for="(dish, index) in menu.dishes" :key="index" class="dish-card card">
@@ -148,14 +158,14 @@ async function saveMenuItem(dish) {
           <div class="dish-details">
             <span class="dish-serves">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-              Serves: {{ dish.numberOfPeople || 4 }} people
+              {{ t('home.results.serves', { count: dish.numberOfPeople || 4 }) }}
             </span>
           </div>
           <p class="dish-description">{{ dish.description }}</p>
           <div class="dish-actions">
             <button @click="saveMenuItem(dish)" class="btn btn-secondary">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-              Save to {{ dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1) }} {{ mealType.charAt(0).toUpperCase() + mealType.slice(1) }}
+              {{ t('home.results.saveButton', { day: getFormattedDayAndMeal.day, meal: getFormattedDayAndMeal.meal }) }}
             </button>
           </div>
         </div>

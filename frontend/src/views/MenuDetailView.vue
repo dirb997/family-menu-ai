@@ -2,10 +2,12 @@
 import { onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const loading = computed(() => store.getters.isLoading)
 const error = computed(() => store.getters.getError)
@@ -20,7 +22,7 @@ onMounted(() => {
 
 // Delete a menu item
 async function deleteMenuItem() {
-  if (confirm('Are you sure you want to delete this menu item?')) {
+  if (confirm(t('menuList.confirmDelete'))) {
     const deleted = await store.dispatch('deleteMenu', menu.value.id)
     if (deleted) {
       router.push('/menu-list')
@@ -28,16 +30,26 @@ async function deleteMenuItem() {
   }
 }
 
-// Helper function to capitalize first letter
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
+// Get translated day name
+function getTranslatedDay(day) {
+  return t(`home.days.${day}`);
+}
+
+// Get translated meal type
+function getTranslatedMeal(meal) {
+  return t(`home.meals.${meal}`);
+}
+
+// Get translated menu type
+function getTranslatedMenuType(type) {
+  return t(`home.menuTypes.${type}`);
 }
 </script>
 
 <template>
   <div class="menu-detail-view">
     <div v-if="loading" class="loading">
-      Loading menu details...
+      {{ t('menuDetail.loading') }}
     </div>
     
     <div v-else-if="error" class="error-message">
@@ -48,46 +60,46 @@ function capitalize(string) {
       <div class="menu-header">
         <h1>{{ menu.name }}</h1>
         <div class="menu-tags">
-          <span class="tag type-tag">{{ capitalize(menu.menuType) }} Menu</span>
-          <span class="tag day-tag">{{ capitalize(menu.dayOfWeek) }}</span>
-          <span class="tag meal-tag">{{ capitalize(menu.mealType) }}</span>
+          <span class="tag type-tag">{{ getTranslatedMenuType(menu.menuType) }}</span>
+          <span class="tag day-tag">{{ getTranslatedDay(menu.dayOfWeek) }}</span>
+          <span class="tag meal-tag">{{ getTranslatedMeal(menu.mealType) }}</span>
         </div>
       </div>
       
       <div class="menu-content">
         <div class="menu-section">
-          <h2>Description</h2>
+          <h2>{{ t('menuDetail.sections.description') }}</h2>
           <p>{{ menu.description }}</p>
         </div>
         
         <div class="menu-section">
-          <h2>Details</h2>
+          <h2>{{ t('menuDetail.sections.details') }}</h2>
           <ul>
-            <li><strong>Serves:</strong> {{ menu.numberOfPeople }} people</li>
+            <li><strong>{{ t('menuDetail.info.serves', { count: menu.numberOfPeople }) }}</strong></li>
             
             <!-- Show specific fields based on menu type -->
             <template v-if="menu.menuType === 'kids' && menu.KidsMenu">
-              <li><strong>Age Range:</strong> {{ menu.KidsMenu.ageRange }}</li>
+              <li><strong>{{ t('menuList.ageRange') }}:</strong> {{ menu.KidsMenu.ageRange }}</li>
             </template>
             <template v-if="menu.menuType === 'allergy' && menu.AllergyMenu">
-              <li><strong>Allergens:</strong> {{ menu.AllergyMenu.allergens || 'None specified' }}</li>
+              <li><strong>{{ t('menuList.allergens') }}:</strong> {{ menu.AllergyMenu.allergens || t('menuList.noneSpecified') }}</li>
             </template>
             
-            <li><strong>Created:</strong> {{ new Date(menu.createdAt).toLocaleDateString() }}</li>
-            <li><strong>Last Updated:</strong> {{ new Date(menu.updatedAt).toLocaleDateString() }}</li>
+            <li><strong>{{ t('menuDetail.info.created') }}:</strong> {{ new Date(menu.createdAt).toLocaleDateString() }}</li>
+            <li><strong>{{ t('menuDetail.info.updated') }}:</strong> {{ new Date(menu.updatedAt).toLocaleDateString() }}</li>
           </ul>
         </div>
       </div>
       
       <div class="menu-actions">
-        <button @click="router.push('/menu-list')" class="back-btn">Back to List</button>
-        <button @click="deleteMenuItem" class="delete-btn">Delete Menu</button>
+        <button @click="router.push('/menu-list')" class="back-btn">{{ t('menuDetail.backToList') }}</button>
+        <button @click="deleteMenuItem" class="delete-btn">{{ t('menuList.deleteMenu') }}</button>
       </div>
     </div>
     
     <div v-else class="not-found">
-      Menu not found.
-      <button @click="router.push('/menu-list')" class="back-btn">Back to Menu List</button>
+      {{ t('menuDetail.notFound') }}
+      <button @click="router.push('/menu-list')" class="back-btn">{{ t('menuDetail.backToList') }}</button>
     </div>
   </div>
 </template>

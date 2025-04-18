@@ -1,8 +1,10 @@
 <script setup>
 import { onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 const store = useStore()
+const { t } = useI18n()
 
 const loading = computed(() => store.getters.isLoading)
 const error = computed(() => store.getters.getError)
@@ -17,7 +19,7 @@ onMounted(() => {
 
 // Delete a menu item
 async function deleteMenuItem(id) {
-  if (confirm('Are you sure you want to delete this menu item?')) {
+  if (confirm(t('menuList.confirmDelete'))) {
     const deleted = await store.dispatch('deleteMenu', id)
     if (deleted) {
       store.dispatch('fetchWeeklyMenu')
@@ -25,9 +27,19 @@ async function deleteMenuItem(id) {
   }
 }
 
-// Helper function to capitalize first letter
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
+// Get translated day name
+function getTranslatedDay(day) {
+  return t(`home.days.${day}`);
+}
+
+// Get translated meal type
+function getTranslatedMeal(meal) {
+  return t(`home.meals.${meal}`);
+}
+
+// Get translated menu type
+function getTranslatedMenuType(type) {
+  return t(`home.menuTypes.${type}`);
 }
 
 // Fixed function to properly check if today matches the passed day name
@@ -40,11 +52,11 @@ function isToday(day) {
 
 <template>
   <div class="weekly-menu-view">
-    <h1 class="page-title">Weekly Menu Calendar</h1>
+    <h1 class="page-title">{{ t('weeklyMenu.title') }}</h1>
     
     <div v-if="loading" class="loading">
       <span class="spinner-large"></span>
-      Loading weekly menu...
+      {{ t('menuDetail.loading') }}
     </div>
     
     <div v-else-if="error" class="error-message">
@@ -56,21 +68,21 @@ function isToday(day) {
       <div class="calendar-header">
         <div class="day-header time-column"></div> <!-- Empty corner cell -->
         <div v-for="day in days" :key="day" class="day-header">
-          {{ capitalize(day) }}
+          {{ getTranslatedDay(day) }}
         </div>
       </div>
       
       <div v-for="meal in mealTypes" :key="meal" class="meal-row">
         <div class="meal-type time-column">
-          <div class="meal-badge">{{ capitalize(meal) }}</div>
+          <div class="meal-badge">{{ getTranslatedMeal(meal) }}</div>
         </div>
         
-        <div v-for="day in days" :key="`${day}-${meal}`" class="menu-cell" :class="{ 'cell-today': isToday(day) }">
+        <div v-for="day in days" :key="`${day}-${meal}`" class="menu-cell" :class="{ 'cell-today': isToday(day) }" :data-today-label="t('weeklyMenu.today')">
           <div v-if="weeklyMenu[day] && weeklyMenu[day][meal] && weeklyMenu[day][meal].length" class="menu-items">
             <div v-for="menuItem in weeklyMenu[day][meal]" :key="menuItem.id" class="menu-item card">
               <div class="menu-item-header">
                 <h4>{{ menuItem.name }}</h4>
-                <button @click="deleteMenuItem(menuItem.id)" class="delete-btn" title="Delete this menu item">
+                <button @click="deleteMenuItem(menuItem.id)" class="delete-btn" :title="t('menuList.deleteMenu')">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"></polyline>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -86,7 +98,7 @@ function isToday(day) {
                   {{ menuItem.numberOfPeople }} 
                 </span>
                 <span class="menu-type-badge" :class="`type-${menuItem.menuType}`">
-                  {{ capitalize(menuItem.menuType) }}
+                  {{ getTranslatedMenuType(menuItem.menuType) }}
                 </span>
               </div>
             </div>
@@ -96,7 +108,7 @@ function isToday(day) {
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="8" y1="12" x2="16" y2="12"></line>
             </svg>
-            <span>No menu planned</span>
+            <span>{{ t('weeklyMenu.emptySlot') }}</span>
           </div>
         </div>
       </div>
@@ -115,9 +127,9 @@ function isToday(day) {
         <path d="M12 18h.01"></path>
         <path d="M16 18h.01"></path>
       </svg>
-      <p>No menu data available yet.</p>
-      <p class="no-data-hint">Generate some menu items on the home page to get started!</p>
-      <router-link to="/" class="btn btn-primary">Go to Menu Generator</router-link>
+      <p>{{ t('weeklyMenu.noData') }}</p>
+      <p class="no-data-hint">{{ t('weeklyMenu.generateHint') }}</p>
+      <router-link to="/" class="btn btn-primary">{{ t('menuList.goToGenerator') }}</router-link>
     </div>
   </div>
 </template>
@@ -223,7 +235,7 @@ function isToday(day) {
 }
 
 .cell-today::before {
-  content: 'TODAY';
+  content: attr(data-today-label);
   position: absolute;
   top: 0;
   right: 0;
