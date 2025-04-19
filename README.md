@@ -1,13 +1,35 @@
-## How to run it
-**Frontend**
+# Family Menu Builder
+
+A full-stack application for creating and managing family meal menus with AI assistance.
+
+## Local Development Setup
+
+### Backend
+
 ```bash
-cd frontend && npm run dev
+cd backend
+npm install
+npm run dev
 ```
 
-**Backend**
+### Frontend
+
 ```bash
-cd backend && npm run dev
+cd frontend
+npm install
+npm run dev
 ```
+
+## Environment Variables
+
+The following environment variables are required for the application:
+
+- `DB_NAME`: Database name
+- `DB_USER`: Database username
+- `DB_PASSWORD`: Database password
+- `DB_HOST`: Database host
+- `AI_API_KEY`: API key for AI services
+- `AI_SERVICE`: AI service provider name
 
 ## Screenshots
 

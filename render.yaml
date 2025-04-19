@@ -1,0 +1,47 @@
+services:
+  # Backend API service
+  - type: web
+    name: menu-builder-api
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_NAME
+        fromDatabase:
+          name: menu-builder-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: menu-builder-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: menu-builder-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: menu-builder-db
+          property: host
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_SERVICE
+        value: deepseek
+
+  # Frontend service
+  - type: web
+    name: menu-builder-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm install -g serve && serve -s dist -l $PORT
+    envVars:
+      - key: VITE_API_URL
+        value: https://menu-builder-api.onrender.com
+
+databases:
+  - name: menu-builder-db
+    databaseName: menus_db
+    plan: free
