@@ -321,10 +321,6 @@ input:focus, select:focus, textarea:focus {
     margin-top: 0.5rem;
   }
   
-  .content-container {
-    padding: 1rem;
-  }
-  
   /* Adjust content wrapper for mobile */
   .content-wrapper {
     min-height: calc(100vh - 250px); /* Adjust for taller header on mobile */
