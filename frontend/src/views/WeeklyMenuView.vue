@@ -42,6 +42,12 @@ function getTranslatedMenuType(type) {
   return t(`home.menuTypes.${type}`);
 }
 
+// Improved truncation function with responsive limit
+function truncateDescription(text) {
+  const maxLength = window.innerWidth > 1200 ? 85 : 60;
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+}
+
 // Fixed function to properly check if today matches the passed day name
 function isToday(day) {
   const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -81,7 +87,7 @@ function isToday(day) {
           <div v-if="weeklyMenu[day] && weeklyMenu[day][meal] && weeklyMenu[day][meal].length" class="menu-items">
             <div v-for="menuItem in weeklyMenu[day][meal]" :key="menuItem.id" class="menu-item card">
               <div class="menu-item-header">
-                <h4>{{ menuItem.name }}</h4>
+                <h4 class="menu-item-title" :title="menuItem.name">{{ menuItem.name }}</h4>
                 <button @click="deleteMenuItem(menuItem.id)" class="delete-btn" :title="t('menuList.deleteMenu')">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -91,7 +97,11 @@ function isToday(day) {
                   </svg>
                 </button>
               </div>
-              <p class="menu-item-description">{{ menuItem.description.length > 100 ? menuItem.description.substring(0, 100) + '...' : menuItem.description }}</p>
+              <div class="menu-item-description-wrapper">
+                <p class="menu-item-description" :title="menuItem.description">
+                  {{ truncateDescription(menuItem.description) }}
+                </p>
+              </div>
               <div class="menu-item-footer">
                 <span class="people-count">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -137,6 +147,11 @@ function isToday(day) {
 <style scoped>
 .weekly-menu-view {
   margin-bottom: 2rem;
+  width: 100%;
+  /* Add consistent height handling */
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-title {
@@ -165,6 +180,7 @@ function isToday(day) {
   border: none;
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
+  width: 100%;
 }
 
 .calendar-header {
@@ -181,6 +197,9 @@ function isToday(day) {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .time-column {
@@ -210,7 +229,7 @@ function isToday(day) {
 .meal-badge {
   background-color: var(--secondary-color);
   color: var(--dark-color);
-  padding: 0.5rem 0.75rem;
+  padding: 1.5rem 0.1rem;
   border-radius: 999px;
   font-size: 0.8rem;
   width: 100%;
@@ -224,6 +243,7 @@ function isToday(day) {
   border-right: 1px solid var(--gray-medium);
   background-color: white;
   position: relative;
+  min-width: 0; /* Important for flex items with text content */
 }
 
 .menu-cell:last-child {
@@ -245,10 +265,12 @@ function isToday(day) {
   font-size: 0.7rem;
   border-bottom-left-radius: var(--border-radius);
   font-weight: bold;
+  z-index: 1;
 }
 
 .menu-items {
   height: 100%;
+  width: 100%;
 }
 
 .menu-item {
@@ -256,6 +278,10 @@ function isToday(day) {
   margin-bottom: 0.75rem;
   border-left: 3px solid var(--secondary-color);
   transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
 }
 
 .menu-item-header {
@@ -263,13 +289,18 @@ function isToday(day) {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 0.5rem;
+  width: 100%;
 }
 
-.menu-item h4 {
+.menu-item-title {
   margin: 0;
   color: var(--primary-color);
   font-size: 1rem;
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
 }
 
 .delete-btn {
@@ -284,6 +315,7 @@ function isToday(day) {
   color: var(--gray-dark);
   transition: var(--transition);
   margin-left: 0.5rem;
+  flex-shrink: 0;
 }
 
 .delete-btn:hover {
@@ -295,11 +327,25 @@ function isToday(day) {
   stroke: currentColor;
 }
 
+.menu-item-description-wrapper {
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
 .menu-item-description {
   font-size: 0.85rem;
   color: var(--dark-color);
   margin: 0 0 0.75rem 0;
   line-height: 1.4;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 3.7em;
 }
 
 .menu-item-footer {
@@ -307,16 +353,19 @@ function isToday(day) {
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
+  width: 100%;
 }
 
 .people-count {
   display: flex;
   align-items: center;
   color: var(--gray-dark);
+  white-space: nowrap;
 }
 
 .people-count svg {
   margin-right: 0.25rem;
+  flex-shrink: 0;
 }
 
 .menu-type-badge {
@@ -325,6 +374,10 @@ function isToday(day) {
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .type-normal {
@@ -344,6 +397,7 @@ function isToday(day) {
 
 .empty-cell {
   height: 100%;
+  padding: 1rem;
   min-height: 100px;
   display: flex;
   flex-direction: column;
@@ -402,9 +456,25 @@ function isToday(day) {
   to { transform: rotate(360deg); }
 }
 
+@media (max-width: 1200px) {
+  .menu-item-description {
+    -webkit-line-clamp: 2;
+    max-height: 2.5em;
+  }
+}
+
 @media (max-width: 992px) {
   .weekly-calendar {
     overflow-x: auto;
+    max-width: 100%;
+  }
+  
+  .calendar-header, .meal-row {
+    min-width: 800px;
+  }
+  
+  .menu-cell {
+    min-width: 100px;
   }
 }
 
@@ -415,6 +485,7 @@ function isToday(day) {
   
   .day-header, .menu-cell {
     padding: 0.5rem;
+    min-width: 90px;
   }
   
   .menu-item-description {
@@ -425,8 +496,23 @@ function isToday(day) {
     padding: 0.5rem;
   }
   
-  .menu-item h4 {
+  .menu-item-title {
     font-size: 0.85rem;
+  }
+  
+  .menu-type-badge {
+    max-width: 70px;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.3rem;
+  }
+  
+  .people-count {
+    font-size: 0.7rem;
+  }
+  
+  .people-count svg {
+    width: 12px;
+    height: 12px;
   }
 }
 </style>

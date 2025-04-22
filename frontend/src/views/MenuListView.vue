@@ -183,6 +183,11 @@ const menuTypeLabels = computed(() => ({
 .menu-list-view {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  /* Add consistent height handling */
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-title {

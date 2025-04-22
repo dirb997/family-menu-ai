@@ -178,6 +178,9 @@ const getFormattedDayAndMeal = computed(() => {
 .home-view {
   max-width: 800px;
   margin: 0 auto;
+  width: 100%;
+  position: relative;
+  padding-bottom: 2rem;
 }
 
 .page-title {

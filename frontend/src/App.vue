@@ -10,31 +10,39 @@ const toggleLanguage = () => {
 </script>
 
 <template>
-  <header>
-    <nav class="navbar">
-      <div class="logo">
-        <h1>Menu Creator</h1>
-      </div>
-      <div class="nav-links">
-        <RouterLink to="/">{{ t('nav.home') }}</RouterLink>
-        <RouterLink to="/weekly-menu">{{ t('nav.weeklyMenu') }}</RouterLink>
-        <RouterLink to="/menu-list">{{ t('nav.allMenus') }}</RouterLink>
-      </div>
-      <div class="language-switcher">
-        <button @click="toggleLanguage" class="language-toggle">
-          {{ locale === 'en' ? '日本語' : 'English' }}
-        </button>
-      </div>
-    </nav>
-  </header>
+  <div class="app-container">
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <h1>Menu Creator</h1>
+        </div>
+        <div class="nav-links">
+          <RouterLink to="/">{{ t('nav.home') }}</RouterLink>
+          <RouterLink to="/weekly-menu">{{ t('nav.weeklyMenu') }}</RouterLink>
+          <RouterLink to="/menu-list">{{ t('nav.allMenus') }}</RouterLink>
+        </div>
+        <div class="language-switcher">
+          <button @click="toggleLanguage" class="language-toggle">
+            {{ locale === 'en' ? '日本語' : 'English' }}
+          </button>
+        </div>
+      </nav>
+    </header>
 
-  <main>
-    <RouterView />
-  </main>
+    <main class="content-container">
+      <div class="content-wrapper">
+        <RouterView v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </RouterView>
+      </div>
+    </main>
 
-  <footer>
-    <p>{{ t('footer.copyright', { year: new Date().getFullYear() }) }}</p>
-  </footer>
+    <footer>
+      <p>{{ t('footer.copyright', { year: new Date().getFullYear() }) }}</p>
+    </footer>
+  </div>
 </template>
 
 <style>
@@ -52,6 +60,7 @@ const toggleLanguage = () => {
   --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   --border-radius: 8px;
   --transition: all 0.3s ease;
+  --content-height: 100vh; /* Fixed height for content */
 }
 
 * {
@@ -65,8 +74,9 @@ body {
   padding: 0;
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: var(--gray-light);
-  color: var(--dark-color);
+  color: var (--dark-color);
   line-height: 1.6;
+  overflow-x: hidden; /* Prevent horizontal scrollbars */
 }
 
 .navbar {
@@ -136,17 +146,68 @@ body {
   font-size: 0.9rem;
   font-weight: 500;
   transition: var(--transition);
+  border: none;
+  cursor: pointer;
 }
 
 .language-toggle:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-main {
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.content-container {
+  flex: 1;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  min-height: calc(100vh - 160px);
+  position: relative;
+}
+
+/* New wrapper to maintain consistent layout */
+.content-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 180px); /* Fixed height minus header and footer */
+  height: auto;
+}
+
+/* Reset previous styles that could conflict */
+main {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  min-height: auto;
+}
+
+/* Improved transition styles to prevent layout jumps */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+  width: 100%;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Force consistent positioning during transitions */
+.fade-enter-active,
+.fade-leave-active,
+.fade-enter-to,
+.fade-leave-from {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
 }
 
 footer {
@@ -155,6 +216,8 @@ footer {
   background-color: var(--dark-color);
   color: white;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 /* Global Button Styles */
@@ -258,8 +321,13 @@ input:focus, select:focus, textarea:focus {
     margin-top: 0.5rem;
   }
   
-  main {
+  .content-container {
     padding: 1rem;
+  }
+  
+  /* Adjust content wrapper for mobile */
+  .content-wrapper {
+    min-height: calc(100vh - 250px); /* Adjust for taller header on mobile */
   }
 }
 </style>
