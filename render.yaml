@@ -40,10 +40,10 @@ services:
     name: menu-builder-frontend
     env: node
     buildCommand: cd frontend && npm install && npm run build
-    startCommand: cd frontend && npm install -g serve && serve -s dist -l $PORT
+    startCommand: cd frontend && npm install -g serve && serve -s dist -l $PORT --single
     envVars:
       - key: VITE_API_URL
-        value: https://menu-builder-api.onrender.com
+        value: https://family-menu-ai.onrender.com
 
 databases:
   - name: menu-builder-db
