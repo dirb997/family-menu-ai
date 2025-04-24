@@ -1,7 +1,8 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/api'
+// Use environment variable for API URL or fallback to localhost for development
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 export default createStore({
   state: {
