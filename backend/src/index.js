@@ -9,12 +9,11 @@ dotenv.config();
 // Initialize express app
 const app = express();
 
-// Configure CORS with specific options
+// Configure CORS to allow all origins temporarily for troubleshooting
 app.use(cors({
-  origin: ['https://family-menu-ai-frontend.onrender.com', 'http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  origin: '*', // Allow all origins temporarily
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 app.use(express.json());
 
