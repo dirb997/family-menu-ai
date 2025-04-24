@@ -51,7 +51,7 @@ export default createStore({
     async fetchMenus({ commit }) {
       commit('setLoading', true)
       try {
-        const response = await axios.get(`${API_URL}/menu`)
+        const response = await axios.get(`${API_URL}/api/menu`)
         commit('setMenus', response.data)
       } catch (error) {
         commit('setError', error.message)
@@ -63,7 +63,7 @@ export default createStore({
     async fetchWeeklyMenu({ commit }) {
       commit('setLoading', true)
       try {
-        const response = await axios.get(`${API_URL}/menu/weekly`)
+        const response = await axios.get(`${API_URL}/api/menu/weekly`)
         commit('setWeeklyMenu', response.data)
       } catch (error) {
         commit('setError', error.message)
@@ -75,7 +75,7 @@ export default createStore({
     async fetchMenuById({ commit }, id) {
       commit('setLoading', true)
       try {
-        const response = await axios.get(`${API_URL}/menu/${id}`)
+        const response = await axios.get(`${API_URL}/api/menu/${id}`)
         commit('setCurrentMenu', response.data)
       } catch (error) {
         commit('setError', error.message)
@@ -87,7 +87,7 @@ export default createStore({
     async generateMenu({ commit }, { prompt, menuType }) {
       commit('setLoading', true)
       try {
-        const response = await axios.post(`${API_URL}/ai/generate`, { prompt, menuType })
+        const response = await axios.post(`${API_URL}/api/ai/generate`, { prompt, menuType })
         if (response.data.dishes) {
           commit('addGeneratedMenu', response.data)
           return response.data
@@ -106,7 +106,7 @@ export default createStore({
     async saveMenu({ commit, dispatch }, menuData) {
       commit('setLoading', true)
       try {
-        await axios.post(`${API_URL}/menu`, menuData)
+        await axios.post(`${API_URL}/api/menu`, menuData)
         // After saving, refresh the menus list
         dispatch('fetchMenus')
         return true
@@ -121,7 +121,7 @@ export default createStore({
     async updateMenu({ commit, dispatch }, { id, menuData }) {
       commit('setLoading', true)
       try {
-        await axios.put(`${API_URL}/menu/${id}`, menuData)
+        await axios.put(`${API_URL}/api/menu/${id}`, menuData)
         // After updating, refresh the menus list
         dispatch('fetchMenus')
         return true
@@ -136,7 +136,7 @@ export default createStore({
     async deleteMenu({ commit, dispatch }, id) {
       commit('setLoading', true)
       try {
-        await axios.delete(`${API_URL}/menu/${id}`)
+        await axios.delete(`${API_URL}/api/menu/${id}`)
         // After deletion, refresh the menus list
         dispatch('fetchMenus')
         return true

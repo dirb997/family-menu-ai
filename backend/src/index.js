@@ -9,8 +9,13 @@ dotenv.config();
 // Initialize express app
 const app = express();
 
-// Middleware
-app.use(cors());
+// Configure CORS with specific options
+app.use(cors({
+  origin: ['https://family-menu-ai-frontend.onrender.com', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Initialize database
