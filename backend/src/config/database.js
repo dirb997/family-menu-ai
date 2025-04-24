@@ -5,32 +5,55 @@ require('dotenv').config();
 const isProduction = process.env.NODE_ENV === 'production';
 const dialect = isProduction ? 'postgres' : 'mysql';
 
-// Database connection configuration
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'menus_db',
-  process.env.DB_USER || 'root',
-  process.env.DB_PASSWORD || '',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    dialect,
-    logging: false, // Set to console.log to see SQL queries
+let sequelize;
+
+if (isProduction && process.env.DATABASE_URL) {
+  // Use the DATABASE_URL provided by Render if available
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
     pool: {
       max: 5,
       min: 0,
       acquire: 30000,
       idle: 10000
-    },
-    // SSL configuration for production PostgreSQL
-    ...(isProduction && {
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
+    }
+  });
+} else {
+  // Database connection configuration for development or when individual params are provided
+  sequelize = new Sequelize(
+    process.env.DB_NAME || 'menus_db',
+    process.env.DB_USER || 'root',
+    process.env.DB_PASSWORD || '',
+    {
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 3306,
+      dialect,
+      logging: false,
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+      },
+      // SSL configuration for production PostgreSQL
+      ...(isProduction && {
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false
+          }
         }
-      }
-    })
-  }
-);
+      })
+    }
+  );
+}
 
 // Test the connection
 const testConnection = async () => {
