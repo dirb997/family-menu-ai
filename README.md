@@ -37,3 +37,6 @@ The following environment variables are required for the application:
 <img width="1511" alt="Screenshot 2025-04-22 at 12 03 38" src="https://github.com/user-attachments/assets/508628dd-0572-4e6a-9671-a571d0d6441c" />
 
 
+## Deploy
+The application is actually deployed on the onrender deployment service.
+URL: https://family-menu-ai-frontend.onrender.com/
