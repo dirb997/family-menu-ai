@@ -9,12 +9,18 @@ dotenv.config();
 // Initialize express app
 const app = express();
 
-// Configure CORS to allow all origins temporarily for troubleshooting
+// Enhanced CORS configuration
 app.use(cors({
-  origin: '*', // Allow all origins temporarily
+  origin: '*', // Allow all origins while debugging
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
+
+// Add explicit handling for OPTIONS requests
+app.options('*', cors());
+
 app.use(express.json());
 
 // Initialize database

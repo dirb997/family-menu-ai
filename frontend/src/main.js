@@ -6,6 +6,11 @@ import router from './router'
 import store from './store'
 import i18n from './i18n'
 
+// Add debugging for i18n
+console.log('i18n instance:', i18n)
+console.log('Current locale:', i18n.global.locale)
+console.log('Available messages:', i18n.global.messages)
+
 const app = createApp(App)
 
 app.use(router)
@@ -13,3 +18,6 @@ app.use(store)
 app.use(i18n)
 
 app.mount('#app')
+
+// Log when app is mounted
+console.log('Vue app mounted')
