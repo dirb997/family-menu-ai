@@ -9,18 +9,10 @@ dotenv.config();
 // Initialize express app
 const app = express();
 
-// Enhanced CORS configuration
-app.use(cors({
-  origin: '*', // Allow all origins while debugging
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}));
+// Basic CORS configuration - simplified to avoid path-to-regexp errors
+app.use(cors());
 
-// Add explicit handling for OPTIONS requests
-app.options('*', cors());
-
+// Use express JSON middleware
 app.use(express.json());
 
 // Initialize database
