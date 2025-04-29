@@ -15,9 +15,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  // JSON import handling - ensure proper bundling of i18n files
+  // JSON import handling - for translation files
   json: {
-    // Don't stringify for better compatibility with vue-i18n
     stringify: false,
   },
   // Define proxy for API requests
@@ -30,19 +29,33 @@ export default defineConfig({
       }
     }
   },
-  // Critical to ensure proper handling of the single-page application
+  // Optimize build for production
   build: {
     outDir: 'dist',
-    // Generate a _redirects file for Netlify/Render to handle SPA routing
+    // Optimize chunk splitting for better performance
     rollupOptions: {
       output: {
         manualChunks: {
-          'i18n': ['vue-i18n'],
+          // Group core libraries together
           'vendor': ['vue', 'vue-router', 'vuex'],
+          // Group utilities separately
+          'utils': ['axios']
         },
       },
     },
-    // Enable source maps for better debugging
+    // Enable source maps for production debugging
     sourcemap: true,
-  }
+    // Ensure proper handling of static assets
+    assetsInlineLimit: 4096,
+    // Minification options
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: false, // Keep console logs for debugging
+        drop_debugger: true
+      }
+    }
+  },
+  // Add SPA base configuration
+  base: '/'
 })
