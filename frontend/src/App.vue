@@ -275,7 +275,7 @@ input:focus, select:focus, textarea:focus {
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.75rem;
-  border: 3px solid var (--primary-light);
+  border: 3px solid var(--primary-light); /* Fixed: removed space in variable name */
   border-radius: 50%;
   border-top-color: var(--primary-color);
   animation: spin 1s infinite linear;
