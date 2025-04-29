@@ -15,8 +15,18 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  // Improved JSON handling
   json: {
-    stringify: true,
+    stringify: false, // Changed to false to handle JSON normally
   },
-  assetsInclude: ['**/*.json'],
+  // Define proxy for API requests
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    }
+  }
 })

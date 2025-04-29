@@ -1,22 +1,30 @@
 import { createI18n } from 'vue-i18n'
-import en from './locales/en.json'
-import ja from './locales/ja.json'
+import enLocale from './locales/en.json'
+import jaLocale from './locales/ja.json'
 
-// Ensure messages are properly loaded by creating a concrete object
+// Initialize messages object with imported JSON directly
 const messages = {
-  en: en,
-  ja: ja
-}
+  en: enLocale,
+  ja: jaLocale
+};
 
-// Debug messages in console
-console.log('Loaded i18n messages:', messages)
+console.log('Loaded i18n messages:', messages);
 
-export default createI18n({
+// Create i18n instance
+const i18n = createI18n({
   legacy: false, // Use Composition API
   locale: 'en', // Default locale
   fallbackLocale: 'en',
-  messages,
+  messages, // Use directly imported messages
   warnHtmlMessage: false, // Suppress HTML warnings
   missingWarn: false, // Suppress missing message warnings
   fallbackWarn: false // Suppress fallback warnings
-})
+});
+
+// We don't need a separate load function anymore, but keeping it for compatibility
+export const loadI18nMessages = async () => {
+  console.log('i18n messages already loaded:', messages);
+  return messages;
+};
+
+export default i18n;

@@ -9,12 +9,13 @@
     "ja": "Japanese" 
   },
   "footer": {
-    "copyright": "© {year} Menu Creator App"
+    "copyright": "© {year} Menu Creator App",
+    "contact": "Contact us at support@menucreatorapp.com" 
   },
   "home": {
     "title": "Menu Creator",
     "intro": {
-      "welcome": "Welcome to the AI-powered Menu Creator! Use this tool to generate custom meal plans based on your preferences.",
+      "welcome": "Welcome to the AI-powered Menu Creator! \nUse this tool to generate custom meal plans based on your preferences.",
       "instructions": "Enter your requirements in the prompt box below, and our AI will suggest dishes for your menu."
     },
     "generate": {

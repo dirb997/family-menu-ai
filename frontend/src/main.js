@@ -9,7 +9,6 @@ import i18n from './i18n'
 // Add debugging for i18n
 console.log('i18n instance:', i18n)
 console.log('Current locale:', i18n.global.locale)
-console.log('Available messages:', i18n.global.messages)
 
 const app = createApp(App)
 

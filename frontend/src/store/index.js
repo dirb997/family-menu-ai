@@ -1,11 +1,30 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 
-// Use environment variable for API URL or fallback to localhost for development
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+// Use environment variable for API URL or fallback to the proxy for development
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 // Log the API URL to help with debugging
-console.log('API URL:', API_URL)
+console.log('API URL:', API_URL || 'Using proxy path /api')
+
+// Create axios instance with timeout and error handling
+const apiClient = axios.create({
+  baseURL: API_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+});
+
+// Add response interceptor for better error handling
+apiClient.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
 
 export default createStore({
   state: {
@@ -40,6 +59,9 @@ export default createStore({
     setError(state, error) {
       state.error = error
     },
+    clearError(state) {
+      state.error = null
+    },
     setGeneratedMenus(state, menus) {
       state.generatedMenus = menus
     },
@@ -53,14 +75,18 @@ export default createStore({
   actions: {
     async fetchMenus({ commit }) {
       commit('setLoading', true)
+      commit('clearError')
       try {
         console.log('Fetching menus from:', `${API_URL}/api/menu`)
-        const response = await axios.get(`${API_URL}/api/menu`)
+        const response = await apiClient.get('/api/menu')
         console.log('Menus response:', response.data)
         commit('setMenus', response.data)
+        return response.data
       } catch (error) {
         console.error('Error fetching menus:', error)
-        commit('setError', error.message || 'Network error when connecting to the API')
+        const errorMessage = error.response?.data?.error || error.message || 'Network error when connecting to the API'
+        commit('setError', errorMessage)
+        return []
       } finally {
         commit('setLoading', false)
       }
@@ -68,14 +94,18 @@ export default createStore({
     
     async fetchWeeklyMenu({ commit }) {
       commit('setLoading', true)
+      commit('clearError')
       try {
         console.log('Fetching weekly menu from:', `${API_URL}/api/menu/weekly`)
-        const response = await axios.get(`${API_URL}/api/menu/weekly`)
+        const response = await apiClient.get('/api/menu/weekly')
         console.log('Weekly menu response:', response.data)
         commit('setWeeklyMenu', response.data)
+        return response.data
       } catch (error) {
         console.error('Error fetching weekly menu:', error)
-        commit('setError', error.message || 'Network error when connecting to the API')
+        const errorMessage = error.response?.data?.error || error.message || 'Network error when connecting to the API'
+        commit('setError', errorMessage)
+        return null
       } finally {
         commit('setLoading', false)
       }
@@ -83,14 +113,18 @@ export default createStore({
     
     async fetchMenuById({ commit }, id) {
       commit('setLoading', true)
+      commit('clearError')
       try {
         console.log('Fetching menu by ID from:', `${API_URL}/api/menu/${id}`)
-        const response = await axios.get(`${API_URL}/api/menu/${id}`)
+        const response = await apiClient.get(`/api/menu/${id}`)
         console.log('Menu by ID response:', response.data)
         commit('setCurrentMenu', response.data)
+        return response.data
       } catch (error) {
         console.error('Error fetching menu by ID:', error)
-        commit('setError', error.message || 'Network error when connecting to the API')
+        const errorMessage = error.response?.data?.error || error.message || 'Network error when connecting to the API'
+        commit('setError', errorMessage)
+        return null
       } finally {
         commit('setLoading', false)
       }
@@ -98,9 +132,10 @@ export default createStore({
     
     async generateMenu({ commit }, { prompt, menuType }) {
       commit('setLoading', true)
+      commit('clearError')
       try {
         console.log('Generating menu with prompt:', prompt, 'and menuType:', menuType)
-        const response = await axios.post(`${API_URL}/api/ai/generate`, { prompt, menuType })
+        const response = await apiClient.post('/api/ai/generate', { prompt, menuType })
         console.log('Generated menu response:', response.data)
         if (response.data.dishes) {
           commit('addGeneratedMenu', response.data)
@@ -109,9 +144,11 @@ export default createStore({
           commit('setError', 'AI response format not recognized. Please try again.')
           return null
         }
+        return null
       } catch (error) {
         console.error('Error generating menu:', error)
-        commit('setError', error.message || 'Network error when connecting to the API')
+        const errorMessage = error.response?.data?.error || error.message || 'Network error when connecting to the API'
+        commit('setError', errorMessage)
         return null
       } finally {
         commit('setLoading', false)
@@ -120,15 +157,17 @@ export default createStore({
     
     async saveMenu({ commit, dispatch }, menuData) {
       commit('setLoading', true)
+      commit('clearError')
       try {
         console.log('Saving menu with data:', menuData)
-        await axios.post(`${API_URL}/api/menu`, menuData)
+        const response = await apiClient.post('/api/menu', menuData)
         // After saving, refresh the menus list
         dispatch('fetchMenus')
         return true
       } catch (error) {
         console.error('Error saving menu:', error)
-        commit('setError', error.message || 'Network error when connecting to the API')
+        const errorMessage = error.response?.data?.error || error.message || 'Network error when connecting to the API'
+        commit('setError', errorMessage)
         return false
       } finally {
         commit('setLoading', false)
@@ -137,15 +176,17 @@ export default createStore({
     
     async updateMenu({ commit, dispatch }, { id, menuData }) {
       commit('setLoading', true)
+      commit('clearError')
       try {
         console.log('Updating menu with ID:', id, 'and data:', menuData)
-        await axios.put(`${API_URL}/api/menu/${id}`, menuData)
+        await apiClient.put(`/api/menu/${id}`, menuData)
         // After updating, refresh the menus list
         dispatch('fetchMenus')
         return true
       } catch (error) {
         console.error('Error updating menu:', error)
-        commit('setError', error.message || 'Network error when connecting to the API')
+        const errorMessage = error.response?.data?.error || error.message || 'Network error when connecting to the API'
+        commit('setError', errorMessage)
         return false
       } finally {
         commit('setLoading', false)
@@ -154,19 +195,26 @@ export default createStore({
     
     async deleteMenu({ commit, dispatch }, id) {
       commit('setLoading', true)
+      commit('clearError')
       try {
         console.log('Deleting menu with ID:', id)
-        await axios.delete(`${API_URL}/api/menu/${id}`)
+        await apiClient.delete(`/api/menu/${id}`)
         // After deletion, refresh the menus list
         dispatch('fetchMenus')
         return true
       } catch (error) {
         console.error('Error deleting menu:', error)
-        commit('setError', error.message || 'Network error when connecting to the API')
+        const errorMessage = error.response?.data?.error || error.message || 'Network error when connecting to the API'
+        commit('setError', errorMessage)
         return false
       } finally {
         commit('setLoading', false)
       }
+    },
+
+    // Clear any stored errors
+    clearError({ commit }) {
+      commit('clearError')
     }
   }
 })

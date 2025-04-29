@@ -41,6 +41,7 @@ const toggleLanguage = () => {
 
     <footer>
       <p>{{ t('footer.copyright', { year: new Date().getFullYear() }) }}</p>
+      <p>{{ t('footer.contact') }}</p>
     </footer>
   </div>
 </template>
@@ -74,7 +75,7 @@ body {
   padding: 0;
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: var(--gray-light);
-  color: var (--dark-color);
+  color: var(--dark-color); /* Fixed: removed space in variable name */
   line-height: 1.6;
   overflow-x: hidden; /* Prevent horizontal scrollbars */
 }
