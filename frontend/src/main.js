@@ -10,6 +10,15 @@ import i18n from './i18n'
 console.log('i18n instance:', i18n)
 console.log('Current locale:', i18n.global.locale)
 
+// Log to confirm locale is set
+if (i18n.global.locale.value) {
+  console.log('Locale value confirmed as:', i18n.global.locale.value)
+} else {
+  console.warn('Locale value is not set correctly')
+  // Force set it again just to be sure
+  i18n.global.locale.value = 'en'
+}
+
 const app = createApp(App)
 
 app.use(router)

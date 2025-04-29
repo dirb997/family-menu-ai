@@ -10,7 +10,7 @@ const messages = {
 
 console.log('Loaded i18n messages:', messages);
 
-// Create i18n instance
+// Create i18n instance with explicit locale initialization
 const i18n = createI18n({
   legacy: false, // Use Composition API
   locale: 'en', // Default locale
@@ -20,6 +20,11 @@ const i18n = createI18n({
   missingWarn: false, // Suppress missing message warnings
   fallbackWarn: false // Suppress fallback warnings
 });
+
+// Make sure the locale is properly set
+if (!i18n.global.locale.value) {
+  i18n.global.locale.value = 'en';
+}
 
 // We don't need a separate load function anymore, but keeping it for compatibility
 export const loadI18nMessages = async () => {

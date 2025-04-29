@@ -1,11 +1,19 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { onMounted } from 'vue'
 
 const { t, locale } = useI18n()
 
+// Ensure locale is set and log it
+onMounted(() => {
+  console.log(`App mounted with locale: ${locale.value}`)
+})
+
 const toggleLanguage = () => {
+  console.log(`Toggling language from ${locale.value}`)
   locale.value = locale.value === 'en' ? 'ja' : 'en'
+  console.log(`Language toggled to ${locale.value}`)
 }
 </script>
 
