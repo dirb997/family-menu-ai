@@ -1,13 +1,13 @@
 <script setup>
-import { onMounted, computed, inject } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-
-const { t } = inject('translations')
+import { useI18n } from 'vue-i18n'
 
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const loading = computed(() => store.getters.isLoading)
 const error = computed(() => store.getters.getError)

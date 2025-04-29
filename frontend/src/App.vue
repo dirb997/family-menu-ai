@@ -1,16 +1,34 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { inject, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { onMounted, ref, watch } from 'vue'
 
-// Use our custom translation system instead of vue-i18n
-const { t, locale } = inject('translations')
+const { t, locale } = useI18n()
+const i18nLoaded = ref(false)
 
-// Check if translations are loaded properly
+// Ensure locale is set and log it
 onMounted(() => {
-  console.log(`App mounted with locale: ${locale.value}`)
-  // Test translation
-  const testTranslation = t('nav.home')
-  console.log('Translation test:', testTranslation)
+  // Check if i18n is properly loaded
+  if (!locale.value) {
+    console.error('Locale not set in onMounted, forcing to "en"')
+    locale.value = 'en'
+  }
+  
+  // Verify that translations are actually loaded
+  try {
+    const testTranslation = t('nav.home')
+    console.log('Translation test:', testTranslation)
+    i18nLoaded.value = !!testTranslation && testTranslation !== 'nav.home'
+    console.log(`App mounted with locale: ${locale.value}, i18n loaded: ${i18nLoaded.value}`)
+  } catch (err) {
+    console.error('Error accessing translations:', err)
+  }
+})
+
+// Watch for locale changes to ensure they take effect
+watch(locale, (newLocale) => {
+  console.log(`Locale changed to ${newLocale}`)
+  document.querySelector('html').setAttribute('lang', newLocale)
 })
 
 const toggleLanguage = () => {
@@ -42,7 +60,11 @@ const toggleLanguage = () => {
 
     <main class="content-container">
       <div class="content-wrapper">
-        <RouterView v-slot="{ Component }">
+        <div v-if="!i18nLoaded" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Loading translations...</p>
+        </div>
+        <RouterView v-else v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
           </transition>

@@ -1,0 +1,110 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "weeklyMenu": "週間メニュー",
+    "allMenus": "すべてのメニュー"
+  },
+  "language": {
+    "en": "英語",
+    "ja": "日本語" 
+  },
+  "footer": {
+    "copyright": "© {year} メニュークリエーターアプリ"
+  },
+  "home": {
+    "title": "メニュークリエーター",
+    "intro": {
+      "welcome": "AIを活用したメニュークリエーターへようこそ！このツールを使用して、あなたの好みに基づいたカスタムミールプランを生成します。",
+      "instructions": "下のプロンプトボックスに要件を入力すると、AIがメニューの候補を提案します。"
+    },
+    "generate": {
+      "title": "メニューを生成",
+      "menuType": "メニュータイプ：",
+      "dayOfWeek": "曜日：",
+      "mealType": "食事タイプ：",
+      "prompt": "プロンプト：",
+      "promptPlaceholder": "例：簡単に入手できる食材を使った4人分の健康的なベジタリアンディナーを作成...",
+      "button": "メニューを生成",
+      "generating": "生成中..."
+    },
+    "results": {
+      "title": "生成されたメニュー候補",
+      "serves": "{count}人分",
+      "saveButton": "{day}の{meal}として保存"
+    },
+    "menuTypes": {
+      "normal": "通常メニュー",
+      "kids": "子供向けメニュー",
+      "allergy": "アレルギー対応メニュー"
+    },
+    "days": {
+      "monday": "月曜日",
+      "tuesday": "火曜日",
+      "wednesday": "水曜日",
+      "thursday": "木曜日",
+      "friday": "金曜日",
+      "saturday": "土曜日",
+      "sunday": "日曜日"
+    },
+    "meals": {
+      "breakfast": "朝食",
+      "lunch": "昼食",
+      "dinner": "夕食"
+    },
+    "alerts": {
+      "promptRequired": "メニュー生成のプロンプトを入力してください",
+      "saveSuccess": "メニューの保存に成功しました！"
+    }
+  },
+  "menuList": {
+    "title": "すべてのメニュー",
+    "loading": "メニューを読み込み中...",
+    "noMenus": "メニューが見つかりません。最初にいくつかのメニューを作成してください！",
+    "filter": {
+      "title": "メニューをフィルタリング",
+      "type": "メニュータイプ",
+      "day": "曜日",
+      "meal": "食事タイプ",
+      "apply": "フィルターを適用",
+      "reset": "フィルターをリセット"
+    },
+    "viewDetails": "詳細を表示",
+    "deleteMenu": "削除",
+    "confirmDelete": "このメニュー項目を削除してもよろしいですか？",
+    "tryGenerating": "ホームページで生成してみましょう！",
+    "goToGenerator": "メニュー生成ページへ",
+    "ageRange": "対象年齢",
+    "allergens": "アレルゲン",
+    "noneSpecified": "指定なし"
+  },
+  "menuDetail": {
+    "loading": "メニューの詳細を読み込み中...",
+    "notFound": "メニューが見つかりません",
+    "backToList": "すべてのメニューに戻る",
+    "sections": {
+      "description": "説明",
+      "details": "詳細"
+    },
+    "info": {
+      "type": "メニュータイプ",
+      "day": "曜日",
+      "meal": "食事",
+      "serves": "{count}人分",
+      "created": "作成日",
+      "updated": "更新日"
+    }
+  },
+  "weeklyMenu": {
+    "title": "週間メニュープランナー",
+    "emptySlot": "メニューが計画されていません",
+    "addMenu": "メニューを追加",
+    "viewDetails": "詳細を表示",
+    "noData": "まだメニューデータがありません。",
+    "generateHint": "始めるには、ホームページでメニュー項目を生成してください！",
+    "today": "今日"
+  },
+  "common": {
+    "error": "エラーが発生しました",
+    "loading": "読み込み中..."
+  }
+}

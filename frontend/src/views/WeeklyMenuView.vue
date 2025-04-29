@@ -1,11 +1,10 @@
 <script setup>
-import { onMounted, computed, inject } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
-
-// Use our custom translation system instead of vue-i18n
-const { t } = inject('translations')
+import { useI18n } from 'vue-i18n'
 
 const store = useStore()
+const { t } = useI18n()
 
 const loading = computed(() => store.getters.isLoading)
 const error = computed(() => store.getters.getError)
