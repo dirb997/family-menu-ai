@@ -1,13 +1,34 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const { t, locale } = useI18n()
+const i18nLoaded = ref(false)
 
 // Ensure locale is set and log it
 onMounted(() => {
-  console.log(`App mounted with locale: ${locale.value}`)
+  // Check if i18n is properly loaded
+  if (!locale.value) {
+    console.error('Locale not set in onMounted, forcing to "en"')
+    locale.value = 'en'
+  }
+  
+  // Verify that translations are actually loaded
+  try {
+    const testTranslation = t('nav.home')
+    console.log('Translation test:', testTranslation)
+    i18nLoaded.value = !!testTranslation && testTranslation !== 'nav.home'
+    console.log(`App mounted with locale: ${locale.value}, i18n loaded: ${i18nLoaded.value}`)
+  } catch (err) {
+    console.error('Error accessing translations:', err)
+  }
+})
+
+// Watch for locale changes to ensure they take effect
+watch(locale, (newLocale) => {
+  console.log(`Locale changed to ${newLocale}`)
+  document.querySelector('html').setAttribute('lang', newLocale)
 })
 
 const toggleLanguage = () => {
@@ -39,7 +60,11 @@ const toggleLanguage = () => {
 
     <main class="content-container">
       <div class="content-wrapper">
-        <RouterView v-slot="{ Component }">
+        <div v-if="!i18nLoaded" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Loading translations...</p>
+        </div>
+        <RouterView v-else v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
           </transition>
@@ -86,6 +111,29 @@ body {
   color: var(--dark-color); /* Fixed: removed space in variable name */
   line-height: 1.6;
   overflow-x: hidden; /* Prevent horizontal scrollbars */
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: var(--primary-color);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(60, 110, 113, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s infinite linear;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .navbar {

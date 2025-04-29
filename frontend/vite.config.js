@@ -15,9 +15,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  // Improved JSON handling
+  // JSON import handling - ensure proper bundling of i18n files
   json: {
-    stringify: false, // Changed to false to handle JSON normally
+    // Don't stringify for better compatibility with vue-i18n
+    stringify: false,
   },
   // Define proxy for API requests
   server: {
@@ -28,5 +29,20 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  // Critical to ensure proper handling of the single-page application
+  build: {
+    outDir: 'dist',
+    // Generate a _redirects file for Netlify/Render to handle SPA routing
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'i18n': ['vue-i18n'],
+          'vendor': ['vue', 'vue-router', 'vuex'],
+        },
+      },
+    },
+    // Enable source maps for better debugging
+    sourcemap: true,
   }
 })

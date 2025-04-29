@@ -2,13 +2,23 @@ import { createI18n } from 'vue-i18n'
 import enLocale from './locales/en.json'
 import jaLocale from './locales/ja.json'
 
+// Ensure messages are loaded synchronously and properly bundled
+console.log('Loading i18n configuration');
+
 // Initialize messages object with imported JSON directly
 const messages = {
   en: enLocale,
   ja: jaLocale
 };
 
-console.log('Loaded i18n messages:', messages);
+// Debug the loaded messages to ensure they're available
+console.log('Loaded i18n messages object structure:', 
+  Object.keys(messages).map(locale => `${locale}: ${Object.keys(messages[locale] || {}).length} keys`)
+);
+
+if (!messages.en || !messages.ja) {
+  console.error('Failed to load one or more locale files!');
+}
 
 // Create i18n instance with explicit locale initialization
 const i18n = createI18n({
@@ -23,13 +33,10 @@ const i18n = createI18n({
 
 // Make sure the locale is properly set
 if (!i18n.global.locale.value) {
+  console.warn('Locale value not set, forcing to "en"');
   i18n.global.locale.value = 'en';
 }
 
-// We don't need a separate load function anymore, but keeping it for compatibility
-export const loadI18nMessages = async () => {
-  console.log('i18n messages already loaded:', messages);
-  return messages;
-};
+console.log('i18n instance created with locale:', i18n.global.locale.value);
 
 export default i18n;
