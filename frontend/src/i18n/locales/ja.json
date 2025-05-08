@@ -9,7 +9,8 @@
     "ja": "日本語" 
   },
   "footer": {
-    "copyright": "© {year} メニュークリエーターアプリ"
+    "copyright": "© {year} メニュークリエーターアプリ",
+    "contact": "問い合わせは：support@menucreatorapp.com" 
   },
   "home": {
     "title": "メニュークリエーター",

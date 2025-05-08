@@ -5,24 +5,43 @@
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
+  /* Ensure background and text colors from base.css apply if not overridden */
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
-a,
-.green {
+a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+  color: var(--color-accent-primary); /* Use primary accent color for links */
+  transition: 0.3s ease;
   padding: 3px;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    color: var(--color-accent-secondary);
+    background-color: rgba(var(--color-accent-primary-rgb), 0.1);
+  }
+}
+
+/* Updated .green class to use the defined green accent color */
+.green {
+  text-decoration: none;
+  color: var(--vt-c-green);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  .green:hover {
+    /* You might want a specific hover for green, or let it inherit from general links if not overridden */
+    /* For example, a slightly darker or lighter green */
+    opacity: 0.8;
   }
 }
 
 @media (min-width: 1024px) {
   #app {
-    padding: 0 2rem;
+    padding: 0 2rem; /* Keep existing responsive padding */
   }
 }

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import MenuListView from '../views/MenuListView.vue' // Added this line
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,7 +17,7 @@ const router = createRouter({
     {
       path: '/menu-list',
       name: 'menu-list',
-      component: () => import('../views/MenuListView.vue')
+      component: MenuListView // Changed this line
     },
     {
       path: '/menu/:id',

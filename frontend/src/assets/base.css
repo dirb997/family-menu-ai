@@ -4,21 +4,29 @@
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /* Updated dark theme colors inspired by Vite.js */
+  --vt-c-black: #1c1c1f; /* Darker background */
+  --vt-c-black-soft: #242424; /* Slightly lighter dark */
+  --vt-c-black-mute: #2f2f2f; /* Muted dark */
 
-  --vt-c-indigo: #2c3e50;
+  --vt-c-indigo: #2c3e50; /* Kept for light mode, or can be an accent */
+
+  /* Accent colors inspired by Vite.js */
+  --vt-c-purple: #bd93f9; /* Vibrant purple */
+  --vt-c-blue: #646cff;   /* Vibrant blue */
+  --vt-c-green: #42b883; /* Vue green, can be used as an accent */
 
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  /* Updated dividers for dark theme */
+  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.48); /* Lighter divider for dark bg */
+  --vt-c-divider-dark-2: rgba(60, 60, 60, 0.29); /* Softer divider for dark bg */
 
   --vt-c-text-light-1: var(--vt-c-indigo);
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  /* Updated text colors for dark theme */
+  --vt-c-text-dark-1: rgba(255, 255, 255, 0.87); /* Brighter white text */
+  --vt-c-text-dark-2: rgba(235, 235, 235, 0.6);  /* Softer white text */
 }
 
 /* semantic color variables for this project */
@@ -32,6 +40,10 @@
 
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
+
+  /* Accent colors for general use */
+  --color-accent-primary: var(--vt-c-blue);
+  --color-accent-secondary: var(--vt-c-purple);
 
   --section-gap: 160px;
 }
@@ -47,6 +59,9 @@
 
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
+
+    /* Ensure accent colors are also set for dark mode if they need to differ */
+    /* For now, we assume they are globally defined and work well on dark bg */
   }
 }
 
