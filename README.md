@@ -32,8 +32,7 @@ The following environment variables are required for the application:
 - `AI_SERVICE`: AI service provider name
 
 ## Screenshots
-<img width="1512" alt="Screenshot 2025-04-22 at 12 04 14" src="https://github.com/user-attachments/assets/7e77da4f-7f66-4422-9945-eab6673fceb9" />
-<img width="1512" alt="Screenshot 2025-04-22 at 12 03 59" src="https://github.com/user-attachments/assets/195fe69f-7eba-4a18-8e7b-727956a2514e" />
-<img width="1511" alt="Screenshot 2025-04-22 at 12 03 38" src="https://github.com/user-attachments/assets/508628dd-0572-4e6a-9671-a571d0d6441c" />
-
+<img width="811" alt="Screenshot 2025-05-09 at 10 22 56" src="https://github.com/user-attachments/assets/b53253be-0d76-42d3-b679-c8d571ab26fa" />
+<img width="810" alt="Screenshot 2025-05-09 at 10 24 13" src="https://github.com/user-attachments/assets/45056e35-ab55-44d0-8519-9208d078168a" />
+<img width="810" alt="Screenshot 2025-05-09 at 10 24 13" src="https://github.com/user-attachments/assets/8c23f6b7-1f03-48b3-8645-dcca4ae0c39c" />
 
