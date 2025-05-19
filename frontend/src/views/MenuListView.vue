@@ -403,7 +403,11 @@ const menuTypeLabels = computed(() => ({
 .btn-danger {
   background-color: var(--vt-c-red, #d9534f); /* Fallback red */
   color: var(--vt-c-white);
-  border: 1px solid transparent;
+  border: 10px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  display: flex;
 }
 
 .btn-danger:hover {
@@ -413,6 +417,7 @@ const menuTypeLabels = computed(() => ({
 
 .btn-danger svg {
   stroke: var(--vt-c-white);
+  margin-right: 5px;
 }
 
 /* Empty State Styling */
